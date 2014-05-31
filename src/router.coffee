@@ -3,10 +3,11 @@ $ ->
     REPLIT.OpenPage 'workspace'
 
   page '/examples', (context, next) ->
+    console.log REPLIT.current_lang
     if REPLIT.current_lang? and REPLIT.jqconsole.GetState() is 'prompt'
       $('#examples-editor').toggle REPLIT.split_ratio != REPLIT.EDITOR_HIDDEN
       $('#examples-console').toggle REPLIT.split_ratio != REPLIT.CONSOLE_HIDDEN
-      REPLIT.OpenPage 'examples'
+      REPLIT.OpenPage 'examples' 
     else
       Router.navigate '/'
 
@@ -19,13 +20,14 @@ $ ->
   page '/languages', ->
     REPLIT.OpenPage 'languages'
 
-  page '/languages/:lang', (context) ->
+  page '/languages/:lang/:lesson', (context) ->
     # So we don't try to load from localStorage.
     REPLIT.url_language = true
     if lang = context.params.lang
       old_lang = REPLIT.current_lang_name
       REPLIT.current_lang_name = lang
       REPLIT.OpenPage 'workspace'
+      REPLIT.lesson = context.params.lang
       if old_lang isnt lang
         REPLIT.LoadLanguage lang
 
